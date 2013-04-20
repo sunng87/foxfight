@@ -37,6 +37,15 @@ html, body {
    background: rgba(153,81,41,0.85);
    border-color: rgb(204,101,35);
 }
-.navbar-inverse .navbar-inner .brand {
+.navbar-inverse .navbar-inner .brand,
+.navbar-inverse .navbar-inner .nav li {
    color: #FFF;
+}
+
+.navbar .nav.pull-right {
+   margin-right: 40px;
+}
+
+.loading {
+   display: none;
 }
