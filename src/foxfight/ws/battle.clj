@@ -52,7 +52,7 @@
             power (:power msg)
             target (keyword (if (= origin "from") "to" "from"))]
         (dosync
-         (alter battles update-in [target :blood] #(- % power)))
+         (alter battles update-in [bid target :blood] #(- % power)))
         (let [resp {:status :engadge
                     :from-blood (-> @battles (get bid) :from :blood)
                     :to-blood (-> @battles (get bid) :to :blood)
@@ -63,5 +63,5 @@
               (.sendStringByFuture (json/write-str resp))))))))
 
 (defn ws-onWebSocketClose [this status reason]
-  (dosync (alter battles dissoc (:bid @(.state this)))))
+  #_(dosync (alter battles dissoc (:bid @(.state this)))))
 
