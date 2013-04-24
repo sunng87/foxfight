@@ -11,5 +11,6 @@
                  [org.clojure/tools.logging "0.2.4"]
                  [com.novemberain/monger "1.5.0"]
                  [org.clojure/data.json "0.2.2"]]
-  :aot [foxfight.ws.location]
+  :aot [foxfight.ws.location
+        foxfight.ws.battle]
   :main foxfight.core)

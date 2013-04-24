@@ -27,9 +27,13 @@
                      (mc/find-maps location-collection query))]
     (json-response results)))
 
+(defn handle-battle [req]
+  (hbs/render-file "battle" {:bid (-> req :params :bid)}))
+
 (defroutes default-routes
   (GET "/" [] index)
   (GET "/location/nearby" [] handle-nearby-query)
+  (GET "/battle" [] handle-battle)
   (route/resources "/"))
 
 (def app (handler/site default-routes))

@@ -49,3 +49,22 @@ html, body {
 .loading {
    display: none;
 }
+
+.container.battle {
+   margin-left:20px;
+   margin-right:20px;
+}
+
+.item {
+   margin-bottom: 20px;
+   padding:10px 0;
+   border-bottom:1px #EEE solid;
+}
+progress {
+   border: none;
+   width: 100%;
+}
+progress::-moz-progress-bar { 
+    background: red;	
+}
+

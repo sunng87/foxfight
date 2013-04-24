@@ -2,7 +2,6 @@ define(['jQuery', 'Leaflet'], function($, L){
   var map;
   var position_mark;
   var zoomLevel = 16;
-  var clientId = null;
 
   var CurrentPositionControl = L.Control.extend({
     options: {
@@ -15,26 +14,6 @@ define(['jQuery', 'Leaflet'], function($, L){
       $(container).click(function(){
         setCurrentPosition();
       })
-      
-      return container;
-    }
-  });
-  var ScanCircleControl = L.Control.extend({
-    options: {
-      position: 'topright'
-    },
-
-    onAdd: function (map) {
-      var container = L.DomUtil.create('button', 'btn btn-danger btn-mini');
-      container.innerHTML = '<i class=\"icon-eye-open\"></i>'
-      $(container).click(function(){
-        findNearPoints();
-        var self = this;
-        $(self).attr("disabled", "disabled");
-        setTimeout(function(){
-          $(self).removeAttr("disabled");
-        }, 15000);
-      });
       
       return container;
     }
@@ -61,42 +40,6 @@ define(['jQuery', 'Leaflet'], function($, L){
     });
   };
 
-  var findNearPoints = function() {
-    setCurrentPosition(function(){
-      $.ajax("/location/nearby", {
-        data: {lat: position_mark.getLatLng().lat, 
-               lon: position_mark.getLatLng().lng},
-        type: "GET",
-        success: function(r){
-          var markers = [];
-          r.forEach(function(i){
-
-            if (i["client-id"] === clientId) {
-              return ;
-            } else {
-              var coords = [i.loc.coordinates[1], i.loc.coordinates[0]];
-              var m = L.circle(coords, 5, {
-                color: 'red',
-                fillColor: 'red',
-                fillOpacity: 0.5
-              }).bindPopup(
-                "<i class=\"icon-user\"></i> " 
-                  + i["client-id"].substring(0, 5)
-                  + "***");
-              markers.push(m);
-            }
-          });
-
-          var lg = new L.LayerGroup(markers);
-          lg.addTo(map);
-          setTimeout(function(){
-            map.removeLayer(lg);            
-          }, 15000);
-        }
-      });
-    });
-  };
-
   return {
     
     initialize: function(){
@@ -104,24 +47,64 @@ define(['jQuery', 'Leaflet'], function($, L){
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
-      new CurrentPositionControl().addTo(map);
-      new ScanCircleControl().addTo(map);
+      //new CurrentPositionControl().addTo(map);
     },
 
     getMap: function(){
       return map;
     },
 
-    viewCurrent: function(){
-      setCurrentPosition();
+    viewCurrent: function(cb){
+      setCurrentPosition(cb);
     },
 
     trackCurrent: function(c){
       navigator.geolocation.watchPosition(c);
     },
     
-    setClientId: function(cid) {
-      clientId = cid;
+    addControl: function(html, cb){
+      var ControlClass = L.Control.extend({
+        options: {
+          position: 'topright'
+        },
+        
+        onAdd: function (map) {
+          var container = $(html);
+          container.click(cb);
+          
+          return container[0];
+        }
+      });
+      new ControlClass().addTo(map);
+    },
+
+    newMarkerWithEvent: function(coords, clickcb){
+      return L.circle(coords, 10, {
+        color: 'red',
+        fillColor: 'red',
+        fillOpacity: 1,
+        stroke: false
+      }).on("click", clickcb);
+    },
+
+    newMarkerGroup: function(markers){
+      return L.layerGroup(markers);
+    },
+
+    getCurrentPosition: function(){
+      if (position_mark) {
+        return position_mark.getLatLng();
+      } else {
+        throw "Unknown position";
+      }
+    },
+
+    toggleCurrentositionIndicator: function(){
+      if (map.hasLayer(position_mark)) {
+        map.removeLayer(position_mark);
+      } else {
+        map.addLayer(position_mark);
+      }
     }
   };
 });
