@@ -4,7 +4,8 @@
       "Leaflet": "github:Leaflet/Leaflet/v0.5.1",
       "require": "github:jrburke/requirejs/2.1.5",
       "bootstrap": "github:twitter/bootstrap/v2.3.1",
-      "Font-Awesome": "github:FortAwesome/Font-Awesome/v3.0.2"
+      "Font-Awesome": "github:FortAwesome/Font-Awesome/v3.0.2",
+      "jrumble": "github:jackrugile/jrumble/master"
     }
   }
 }

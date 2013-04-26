@@ -1,4 +1,4 @@
-define(["jQuery"], function($){
+define(["jQuery", "jRumble"], function($, _){
   var ws;
   var battleReady = false;
   var p = [];
@@ -31,9 +31,14 @@ define(["jQuery"], function($){
       }
     }
   };
+
+  var rumb; // rumb timeout
   
   return {
     setup: function() {
+
+      $(".rumblable").jrumble();
+
       bid = $(".battle").attr("data-bid");
       var clientId = sessionStorage.clientId;
       WebSocket = WebSocket || MozWebSocket;
@@ -61,6 +66,11 @@ define(["jQuery"], function($){
 
           if (role != resp["attack-origin"]) {
             navigator.vibrate([200]);
+            if (rumb) clearTimeout(rumb);
+            $(".rumblable").trigger('startRumble');
+            rumb = setTimeout(function(){
+              $(".rumblable").trigger('stopRumble');
+            }, 2000);
           }
 
           if (resp["from-blood"] < 0 || resp["to-blood"] < 0) {

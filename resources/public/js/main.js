@@ -2,7 +2,8 @@ requirejs.config({
   //In order for proper loading of depenencies in Terraformer modules set the path up in requirejs.config
   paths: {
     Leaflet: "leaflet",
-    jQuery: "vendor/jquery-1.9.0.min"
+    jQuery: "vendor/jquery-1.9.0.min",
+    jRumble: "jrumble/jquery.jrumble.min"
   },
    shim: {
     'Leaflet': {
