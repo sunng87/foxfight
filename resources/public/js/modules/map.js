@@ -14,7 +14,7 @@ define(['jQuery', 'Leaflet'], function($, L){
       $(container).click(function(){
         setCurrentPosition();
       })
-      
+
       return container;
     }
   });
@@ -24,15 +24,15 @@ define(['jQuery', 'Leaflet'], function($, L){
       var coords = [position.coords.latitude, position.coords.longitude];
       map.setView(coords, zoomLevel);
       var accuracy = position.coords.accuracy;
-      
+
       if (position_mark) {
         map.removeLayer(position_mark);
         position_mark = null;
       }
-      
+
       position_mark = L.circle(coords, accuracy, {
-        color: 'blue',
-        fillColor: 'blue',
+        color: '#E82E2E',
+        fillColor: '#EF6767',
         fillOpacity: 0.5
       }).addTo(map).bindPopup('<i class=\"icon-user\"></i> You.');
 
@@ -41,12 +41,15 @@ define(['jQuery', 'Leaflet'], function($, L){
   };
 
   return {
-    
+
     initialize: function(){
       map = L.map("map");
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      L.tileLayer('https://{s}.tiles.mapbox.com/v3/sunng.hfhn9hcn/{z}/{x}/{y}.png', {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
       }).addTo(map);
+      /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);*/
       //new CurrentPositionControl().addTo(map);
     },
 
@@ -61,17 +64,17 @@ define(['jQuery', 'Leaflet'], function($, L){
     trackCurrent: function(c){
       navigator.geolocation.watchPosition(c);
     },
-    
+
     addControl: function(html, cb){
       var ControlClass = L.Control.extend({
         options: {
           position: 'topright'
         },
-        
+
         onAdd: function (map) {
           var container = $(html);
           container.click(cb);
-          
+
           return container[0];
         }
       });
@@ -108,4 +111,3 @@ define(['jQuery', 'Leaflet'], function($, L){
     }
   };
 });
-
